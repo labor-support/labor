@@ -228,7 +228,17 @@
                    target="_blank" class="reference-link">(匯總表)</a>：
                 </div>
                 <div id="level" class="result-value"></div>
-                <!-- 顯示適用級距 -->
+            </div>
+            
+            <!-- 新增實領薪資和公司負擔成本 -->
+            <div class="result-item">
+                <div class="result-title">實領薪資：</div>
+                <div id="actual-salary" class="result-value"></div>
+            </div>
+            
+            <div class="result-item">
+                <div class="result-title">公司負擔成本：</div>
+                <div id="company-cost" class="result-value"></div>
             </div>
             
             <h3>詳細項目：</h3>
@@ -441,6 +451,13 @@
             // 顯示總額（在表格最後一行）
             document.getElementById('company-total').textContent = `${totalCompany.toLocaleString()} 元`;
             document.getElementById('employee-total').textContent = `${totalEmployee.toLocaleString()} 元`;
+            
+            // 計算並顯示實領薪資和公司負擔成本
+            const actualSalary = salary - totalEmployee;
+            const companyCost = salary + totalCompany;
+            
+            document.getElementById('actual-salary').textContent = `${actualSalary.toLocaleString()} 元`;
+            document.getElementById('company-cost').textContent = `${companyCost.toLocaleString()} 元`;
             
             // 顯示結果區塊
             document.getElementById('result').style.display = 'block';
