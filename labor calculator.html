@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<!-- 宣告這是HTML5文件 -->
+<html lang="zh-Hant-TW">
+<!-- 設定網頁語言為繁體中文(台灣) -->
+<head>
+    <!-- 網頁頭部資訊區塊 -->
+    <meta charset="UTF-8">
+    <!-- 設定字符編碼為UTF-8(支援中文) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 設定響應式網頁，讓手機也能正常顯示 -->
+    <title>2025勞健保級距計算器</title>
+    <!-- 網頁標題(顯示在瀏覽器分頁上) -->
+    <style>
+        /* CSS樣式區塊開始 */
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            /* 設定字體為微軟正黑體 */
+            max-width: 800px;
+            /* 設定網頁最大寬度 */
+            margin: 0 auto;
+            /* 讓網頁置中 */
+            padding: 20px;
+            /* 內邊距 */
+            background-color: #f5f5f5;
+            /* 淺灰色背景 */
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 24px;  /* 修改：設定h2標題的字體大小與h1一致 */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        /* 深藍色標題 */
+            text-align: center;
+            /* 文字置中 */
+        }
+        .container {
+            background-color: white;
+            /* 白色背景區塊 */
+            border-radius: 10px;
+            /* 圓角邊框 */
+            padding: 20px;
+            /* 內邊距 */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            /* 陰影效果 */
+        }
+        .input-group {
+            margin-bottom: 20px;
+            /* 底部間距 */
+        }
+        label {
+            display: block;
+            /* 讓標籤獨佔一行 */
+            margin-bottom: 8px;
+            /* 底部間距 */
+            font-weight: bold;
+            /* 粗體字 */
+        }
+        input[type="number"] {
+            width: calc(100% - 22px);
+            /* 輸入框寬度100%減去內邊距和邊框 */
+            padding: 10px;
+            /* 內邊距 */
+            border: 1px solid #ddd;
+            /* 灰色邊框 */
+            border-radius: 5px;
+            /* 圓角 */
+            font-size: 16px;
+            /* 字體大小 */
+            step: 1000;
+            /* 設定步進值為1000 */
+        }
+        button {
+            background-color: #3498db;
+            /* 藍色按鈕 */
+            color: white;
+            /* 白色文字 */
+            border: none;
+            /* 無邊框 */
+            padding: 12px 20px;
+            /* 內邊距 */
+            border-radius: 5px;
+            /* 圓角 */
+            cursor: pointer;
+            /* 鼠標手指圖示 */
+            font-size: 16px;
+            /* 字體大小 */
+            width: 100%;
+            /* 寬度100% */
+            transition: background-color 0.3s;
+            /* 顏色漸變效果 */
+        }
+        button:hover {
+            background-color: #2980b9;
+            /* 鼠標懸停時變深藍色 */
+        }
+        .result {
+            margin-top: 0px;  /* 從10px縮短為5px */
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        .result h2 {
+            margin-top: 0;  /* 新增：移除h2的頂部間距 */
+            margin-bottom: 15px;  /* 新增：保持底部間距 */
+        }
+        .result-item {
+            margin-bottom: 15px;
+            /* 底部間距 */
+        }
+        .result-title {
+            font-weight: bold;
+            /* 粗體字 */
+            color: #2c3e50;
+            /* 深藍色 */
+            margin-bottom: 5px;
+            /* 底部間距 */
+        }
+        .result-value {
+            font-size: 18px;
+            /* 字體大小 */
+            color: #e74c3c;
+            /* 紅色數字 */
+        }
+        .links {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .links h3 {
+            margin-top: 5px;  /* 新增樣式：調整h3標題的上邊距 */
+            margin-bottom: 0px;  /* 新增樣式：調整h3標題的下邊距 */
+        }
+        .links a {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+            /* 鼠標懸停時顯示底線 */
+        }
+        table {
+            width: 100%;
+            /* 表格寬度100% */
+            border-collapse: collapse;
+            /* 合併邊框 */
+            margin-top: 20px;
+            /* 頂部間距 */
+            font-size: 14px;
+            /* 字體大小 */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            /* 灰色邊框 */
+            padding: 8px;
+            /* 內邊距 */
+            text-align: left;
+            /* 文字靠左 */
+        }
+        th {
+            background-color: #f2f2f2;
+            /* 淺灰色表頭背景 */
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+            /* 隔行淺灰色背景 */
+        }
+        .total-row {
+            font-weight: bold;
+            /* 粗體字 */
+            font-size: 20px;
+            /* 字體大小比一般行大 */
+            color: #e74c3c;
+            /* 紅色文字 */
+        }
+        .total-row td:first-child {
+            color: #e74c3c;
+            /* 紅色文字 */
+        }
+        .reference-link {
+            font-size: 12px;
+            /* 參考連結字體大小改小 */
+            margin-left: 10px;
+            /* 左邊距 */
+        }
+        h3 {
+            font-size: 16px;
+            /* 設定h3標題字體大小與適用級距一致 */
+            font-weight: bold;
+            /* 保持粗體效果 */
+            color: #2c3e50;
+            /* 保持深藍色 */
+        }
+    </style>
+    <!-- CSS樣式區塊結束 -->
+</head>
+<body>
+    <!-- 網頁主體內容開始 -->
+    <div class="container">
+        <h1>2025年勞健保級距計算器</h1>
+        <!-- 主標題 -->
+        
+        <div class="input-group">
+            <label for="salary">請輸入您的月薪資（新台幣）：</label>
+            <!-- 輸入框標籤 -->
+            <input type="number" id="salary" placeholder="例如：30000" step="1000" onkeypress="if(event.key === 'Enter') calculate()">
+            <!-- 薪資輸入框，設定步進值為1000，並添加Enter鍵事件 -->
+        </div>
+        
+        <button onclick="calculate()">立即計算</button>
+        <!-- 計算按鈕 -->
+        
+        <div id="result" class="result" style="display: none;">
+            <!-- 計算結果區塊 (初始隱藏) -->
+            <h2>計算結果</h2>
+            <!-- 結果標題 -->
+            
+            <div class="result-item">
+                <div class="result-title">適用級距
+                    <a href="https://docs.google.com/spreadsheets/d/16k707oYHDpM-3u1HiFJLXMaXqRqQzsi9wHlnUTJ7cKw/edit?gid=0#gid=0" 
+                   target="_blank" class="reference-link">(匯總表)</a>：
+                </div>
+                <div id="level" class="result-value"></div>
+                <!-- 顯示適用級距 -->
+            </div>
+            
+            <h3>詳細項目：</h3>
+            <!-- 詳細項目標題 -->
+            
+            <table>
+                <!-- 詳細項目表格 -->
+                <tr>
+                    <th>項目</th>
+                    <th>公司負擔</th>
+                    <th>員工負擔</th>
+                </tr>
+                <tr>
+                    <td>勞保費</td>
+                    <td id="company-labor"></td>
+                    <td id="employee-labor"></td>
+                </tr>
+                <tr>
+                    <td>健保費</td>
+                    <td id="company-health"></td>
+                    <td id="employee-health"></td>
+                </tr>
+                <tr>
+                    <td>職保費</td>
+                    <td id="company-job"></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>新制勞退金(6%)</td>
+                    <td id="company-retire"></td>
+                    <td>-</td>
+                </tr>
+                <tr class="total-row">
+                    <!-- 新增總計行 -->
+                    <td>負擔總額</td>
+                    <td id="company-total"></td>
+                    <td id="employee-total"></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="links">
+            <!-- 相關連結區塊 -->
+            <h3 style="display: inline-block; margin-right: 10px;">相關資源：</h3>
+            <a href="https://www.mol.gov.tw/" id="link1" target="_blank">勞動部</a>
+            <a href="https://www.nhi.gov.tw/ch/mp-1.html" id="link2" target="_blank">健保署</a>
+            <a href="https://www.bli.gov.tw/" id="link3" target="_blank">勞保局</a>
+            <a href="https://www.bli.gov.tw/0012942.html" id="link4" target="_blank">勞退個人專戶查詢</a>
+            
+            <h3>資料來源：</h3>
+            <div class="source-links">
+                <a href="https://www.bli.gov.tw/0108700.html" target="_blank">114年勞保、災保投保薪資分級表及保險費分攤金額表</a><br>
+                <a href="https://www.ly.gov.tw/Pages/ashx/File.ashx?FilePath=~/File/Attach/216571/File_19845357.pdf" target="_blank">114年全民健康保險費及勞工保險費負擔金額表</a><br>
+                <a href="https://www.bli.gov.tw/0013083.html" target="_blank">新制勞工退休金月提繳分級表</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript程式碼開始
+        // 從Excel轉換的完整級距資料 (已修正所有級距)
+        const insuranceData = [
+            // 格式說明：
+            // level: 級距編號或說明
+            // min: 級距下限
+            // company: [勞保, 健保, 職保, 勞退]
+            // employee: [勞保, 健保]
+            {level: "部分工時", min: 0, company: [972, 1384, 60.04, 90], employee: [277, 443]},
+            {level: 1, min: 11100, company: [972, 1384, 60.04, 666], employee: [277, 443]},
+            {level: 2, min: 12540, company: [1097, 1384, 60.04, 752], employee: [313, 443]},
+            {level: 3, min: 13500, company: [1182, 1384, 60.04, 810], employee: [338, 443]},
+            {level: 4, min: 15840, company: [1386, 1384, 60.04, 950], employee: [396, 443]},
+            {level: 5, min: 16500, company: [1444, 1384, 60.04, 990], employee: [413, 443]},
+            {level: 6, min: 17280, company: [1512, 1384, 60.04, 1037], employee: [432, 443]},
+            {level: 7, min: 17880, company: [1564, 1384, 60.04, 1073], employee: [447, 443]},
+            {level: 8, min: 19047, company: [1666, 1384, 60.04, 1142.82], employee: [476, 443]},
+            {level: 9, min: 20008, company: [1751, 1384, 60.04, 1200], employee: [500, 443]},
+            {level: 10, min: 21009, company: [1838, 1384, 60.04, 1261], employee: [525, 443]},
+            {level: 11, min: 22000, company: [1925, 1384, 60.04, 1320], employee: [550, 443]},
+            {level: 12, min: 23100, company: [2022, 1384, 60.04, 1386], employee: [577, 443]},
+            {level: 13, min: 24000, company: [2100, 1384, 60.04, 1440], employee: [600, 443]},
+            {level: 14, min: 25250, company: [2210, 1384, 60.04, 1515], employee: [632, 443]},
+            {level: 15, min: 26400, company: [2310, 1384, 60.04, 1584], employee: [660, 443]},
+            {level: 16, min: 27600, company: [2415, 1384, 60.04, 1656], employee: [690, 443]},
+            {level: 17, min: 28590, company: [2501, 1384, 60.04, 1715], employee: [715, 443]},
+            {level: 18, min: 28800, company: [2520, 1394, 60, 1728], employee: [720, 447]},
+            {level: 19, min: 30300, company: [2651, 1466, 64, 1818], employee: [758, 470]},
+            {level: 20, min: 31800, company: [2783, 1539, 67, 1908], employee: [795, 493]},
+            {level: 21, min: 33300, company: [2914, 1611, 70, 1998], employee: [833, 516]},
+            {level: 22, min: 34800, company: [3045, 1684, 73, 2088], employee: [870, 540]},
+            {level: 23, min: 36300, company: [3176, 1757, 76, 2178], employee: [908, 563]},
+            {level: 24, min: 38200, company: [3342, 1849, 80, 2292], employee: [955, 592]},
+            {level: 25, min: 40100, company: [3509, 1940, 84, 2406], employee: [1002, 622]},
+            {level: 26, min: 42000, company: [3675, 2032, 88, 2520], employee: [1050, 651]},
+            {level: 27, min: 43900, company: [3841, 2124, 92, 2634], employee: [1098, 681]},
+            {level: 28, min: 45800, company: [4008, 2216, 96, 2748], employee: [1145, 710]},
+            {level: 29, min: 48200, company: [4008, 2332, 101, 2892], employee: [1145, 748]},
+            {level: 30, min: 50600, company: [4008, 2449, 106, 3036], employee: [1145, 785]},
+            {level: 31, min: 53000, company: [4008, 2565, 111, 3180], employee: [1145, 822]},
+            {level: 32, min: 55400, company: [4008, 2681, 116, 3324], employee: [1145, 859]},
+            {level: 33, min: 57800, company: [4008, 2797, 121, 3468], employee: [1145, 896]},
+            {level: 34, min: 60800, company: [4008, 2942, 128, 3648], employee: [1145, 943]},
+            {level: 35, min: 63800, company: [4008, 3087, 134, 3828], employee: [1145, 990]},
+            {level: 36, min: 66800, company: [4008, 3233, 140, 4008], employee: [1145, 1036]},
+            {level: 37, min: 69800, company: [4008, 3378, 147, 4188], employee: [1145, 1083]},
+            {level: 38, min: 72800, company: [4008, 3523, 153, 4368], employee: [1145, 1129]},
+            {level: 39, min: 76500, company: [4008, 3702, 153, 4590], employee: [1145, 1187]},
+            {level: 40, min: 80200, company: [4008, 3881, 153, 4812], employee: [1145, 1244]},
+            {level: 41, min: 83900, company: [4008, 4060, 153, 5034], employee: [1145, 1301]},
+            {level: 42, min: 87600, company: [4008, 4239, 153, 5256], employee: [1145, 1359]},
+            {level: 43, min: 92100, company: [4008, 4457, 153, 5526], employee: [1145, 1428]},
+            {level: 44, min: 96600, company: [4008, 4675, 153, 5796], employee: [1145, 1498]},
+            {level: 45, min: 101100, company: [4008, 4892, 153, 6066], employee: [1145, 1568]},
+            {level: 46, min: 105600, company: [4008, 5110, 153, 6336], employee: [1145, 1638]},
+            {level: 47, min: 110100, company: [4008, 5328, 153, 6606], employee: [1145, 1708]},
+            {level: 48, min: 115500, company: [4008, 5589, 153, 6930], employee: [1145, 1791]},
+            {level: 49, min: 120900, company: [4008, 5850, 153, 7254], employee: [1145, 1875]},
+            {level: 50, min: 126300, company: [4008, 6112, 153, 7578], employee: [1145, 1959]},
+            {level: 51, min: 131700, company: [4008, 6373, 153, 7902], employee: [1145, 2043]},
+            {level: 52, min: 137100, company: [4008, 6634, 153, 8226], employee: [1145, 2126]},
+            {level: 53, min: 142500, company: [4008, 6896, 153, 8550], employee: [1145, 2210]},
+            {level: 54, min: 147900, company: [4008, 7157, 153, 8874], employee: [1145, 2294]},
+            {level: 55, min: 150000, company: [4008, 7259, 153, 9000], employee: [1145, 2327]},
+            {level: 56, min: 156400, company: [4008, 7568, 153, 9000], employee: [1145, 2426]},
+            {level: 57, min: 162800, company: [4008, 7878, 153, 9000], employee: [1145, 2525]},
+            {level: 58, min: 169200, company: [4008, 8188, 153, 9000], employee: [1145, 2624]},
+            {level: 59, min: 175600, company: [4008, 8497, 153, 9000], employee: [1145, 2724]},
+            {level: 60, min: 182000, company: [4008, 8807, 153, 9000], employee: [1145, 2823]},
+            {level: 61, min: 189500, company: [4008, 9170, 153, 9000], employee: [1145, 2939]},
+            {level: 62, min: 197000, company: [4008, 9533, 153, 9000], employee: [1145, 3055]},
+            {level: 63, min: 204500, company: [4008, 9896, 153, 9000], employee: [1145, 3172]},
+            {level: 64, min: 212000, company: [4008, 10259, 153, 9000], employee: [1145, 3288]},
+            {level: 65, min: 219500, company: [4008, 10622, 153, 9000], employee: [1145, 3404]},
+            {level: 66, min: 228200, company: [4008, 11043, 153, 9000], employee: [1145, 3539]},
+            {level: 67, min: 236900, company: [4008, 11464, 153, 9000], employee: [1145, 3674]},
+            {level: 68, min: 245600, company: [4008, 11885, 153, 9000], employee: [1145, 3809]},
+            {level: 69, min: 254300, company: [4008, 12306, 153, 9000], employee: [1145, 3944]},
+            {level: 70, min: 263000, company: [4008, 12727, 153, 9000], employee: [1145, 4079]},
+            {level: 71, min: 273000, company: [4008, 13211, 153, 9000], employee: [1145, 4234]},
+            {level: 72, min: 283000, company: [4008, 13695, 153, 9000], employee: [1145, 4389]},
+            {level: 73, min: 293000, company: [4008, 14179, 153, 9000], employee: [1145, 4544]},
+            {level: 74, min: 303000, company: [4008, 14663, 153, 9000], employee: [1145, 4700]},
+            {level: 75, min: 313000, company: [4008, 15146, 153, 9000], employee: [1145, 4855]}
+        ];
+
+        // 計算函式
+        function calculate() {
+            // 取得輸入的薪資
+            const salaryInput = document.getElementById('salary');
+            const salary = parseFloat(salaryInput.value);
+            
+            // 驗證輸入是否有效
+            if (isNaN(salary) || salary < 0) {
+                alert("請輸入有效的薪資金額！");
+                salaryInput.focus();
+                return;
+            }
+            
+            let found = null;
+            let nextLevelMin = Infinity; // 下一個級距的下限
+            
+            // 尋找符合薪資的級距
+            for (let i = 0; i < insuranceData.length; i++) {
+                if (salary >= insuranceData[i].min) {
+                    found = insuranceData[i];
+                    // 取得下一個級距的下限（如果有的話）
+                    if (i < insuranceData.length - 1) {
+                        nextLevelMin = insuranceData[i + 1].min;
+                    } else {
+                        nextLevelMin = Infinity;
+                    }
+                } else {
+                    break;
+                }
+            }
+            
+            // 如果沒有找到合適的級距，使用最低級距
+            if (!found) {
+                found = insuranceData[0];
+                nextLevelMin = insuranceData[1].min;
+            }
+            
+            // 解構賦值取得各項金額
+            const [comLabor, comHealth, comJob, comRetire] = found.company;
+            const [empLabor, empHealth] = found.employee;
+            
+            // 計算總額
+            const totalCompany = comLabor + comHealth + comJob + comRetire;
+            const totalEmployee = empLabor + empHealth;
+            
+            // 顯示適用級距範圍
+            let levelText = `${found.level}（${found.min.toLocaleString()} 元`;
+            if (nextLevelMin !== Infinity) {
+                levelText += ` ~ ${(nextLevelMin - 1).toLocaleString()} 元`;
+            } else {
+                levelText += ` 元以上`;
+            }
+            levelText += `）`;
+            
+            document.getElementById('level').textContent = levelText;
+            
+            // 顯示詳細項目
+            document.getElementById('company-labor').textContent = `${comLabor.toLocaleString()} 元`;
+            document.getElementById('employee-labor').textContent = `${empLabor.toLocaleString()} 元`;
+            document.getElementById('company-health').textContent = `${comHealth.toLocaleString()} 元`;
+            document.getElementById('employee-health').textContent = `${empHealth.toLocaleString()} 元`;
+            document.getElementById('company-job').textContent = `${comJob.toLocaleString()} 元`;
+            document.getElementById('company-retire').textContent = `${comRetire.toLocaleString()} 元`;
+            
+            // 顯示總額（在表格最後一行）
+            document.getElementById('company-total').textContent = `${totalCompany.toLocaleString()} 元`;
+            document.getElementById('employee-total').textContent = `${totalEmployee.toLocaleString()} 元`;
+            
+            // 顯示結果區塊
+            document.getElementById('result').style.display = 'block';
+        }
+
+        // 可以在這裡設定預留連結的實際網址
+        // document.getElementById('link1').href = "https://www.mol.gov.tw/";
+        // document.getElementById('link2').href = "https://www.nhi.gov.tw/";
+        // document.getElementById('link3').href = "https://www.bli.gov.tw/";
+    </script>
+    <!-- JavaScript程式碼結束 -->
+</body>
+</html>
